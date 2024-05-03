@@ -5,14 +5,7 @@ import random
 import pandas as pd
 from instagrapi import Client
 from constant import hashtag_list, column_names
-from dotenv import load_dotenv
-from os.path import join, dirname
 
-dotenv_path = join(dirname(__file__), '.env')
-load_dotenv(dotenv_path)
-
-username = os.environ.get("USER_NAME")
-password = os.environ.get("USER_PASSWORD")
 
 def random_delay():
     return random.uniform(10, 30)
@@ -45,6 +38,20 @@ def run_script():
     likes_count = 0
     replies_count = 0
     followers_count = 0
+    cl = Client()
+    while True:
+        username = input("Enter your Instagram username: ")
+        password = input("Enter your Instagram password: ")
+        try:
+            cl.login(username, password)
+            break  # Break out of the loop if login is successful
+        except Exception as e:
+            print("Error logging in to Instagram:", e)
+            choice = input("Do you want to try again? (yes/no): ")
+            if choice.lower() != "yes":
+                print("Exiting the script.")
+                return
+    
 
     while True:
         if is_running:
@@ -114,9 +121,6 @@ def run_script():
             print("Script Paused. Press Ctrl+C to Resume...")
             time.sleep(5)
 
-
-cl = Client()
-cl.login(username, password)
 
 if __name__ == '__main__':
     run_script()
